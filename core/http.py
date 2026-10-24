@@ -322,7 +322,15 @@ class ReconHTTP:
                     "Accept-Language": "en-US,en;q=0.8",
                 }
             )
-            retry = Retry(
+            # urllib3 retries inside the adapter, so pace each retry after its backoff.
+            rate_limiter = self.rate_limiter
+
+            class RateLimitedRetry(Retry):
+                def sleep(self, response: Any = None) -> None:
+                    super().sleep(response)
+                    rate_limiter.wait()
+
+            retry = RateLimitedRetry(
                 total=int((self.config.get("run") or {}).get("retries", 2)),
                 backoff_factor=0.4,
                 status_forcelist=(429, 500, 502, 503, 504),

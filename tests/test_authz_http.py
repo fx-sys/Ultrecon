@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import io
 import socket
+import threading
+from http.server import BaseHTTPRequestHandler, HTTPServer
 
 import pytest
 
@@ -108,3 +110,50 @@ def test_dns_destination_accepts_only_global_addresses(monkeypatch) -> None:
     monkeypatch.setattr("core.http.socket.getaddrinfo", getaddrinfo)
     client = ReconHTTP({"http": {"allow_private_ips": False}})
     assert client._safe_destination("https://fixture.example/")
+
+
+def test_http_retries_wait_on_shared_rate_limiter(monkeypatch) -> None:
+    class RetryHandler(BaseHTTPRequestHandler):
+        request_count = 0
+
+        def do_GET(self) -> None:
+            type(self).request_count += 1
+            self.send_response(503)
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+
+        def log_message(self, *_args) -> None:
+            pass
+
+    class CountingRateLimiter:
+        def __init__(self) -> None:
+            self.calls = 0
+
+        def wait(self) -> None:
+            self.calls += 1
+
+    server = HTTPServer(("127.0.0.1", 0), RetryHandler)
+    server_thread = threading.Thread(target=server.serve_forever, daemon=True)
+    server_thread.start()
+    client = ReconHTTP(
+        {
+            "run": {"rate_limit": 1, "retries": 2, "connect_timeout": 1, "timeout": 1},
+            "http": {"allow_private_ips": True},
+        },
+        scope=parse_scope_lines("retry.example"),
+    )
+    limiter = CountingRateLimiter()
+    client.rate_limiter = limiter
+    monkeypatch.setattr(client, "_destination_addresses", lambda _url: ["127.0.0.1"])
+    try:
+        response = client.get(f"http://retry.example:{server.server_port}/")
+    finally:
+        client._session().close()
+        server.shutdown()
+        server.server_close()
+        server_thread.join(timeout=1)
+
+    assert response is not None
+    assert response.status_code == 503
+    assert RetryHandler.request_count == 3
+    assert limiter.calls == 3
