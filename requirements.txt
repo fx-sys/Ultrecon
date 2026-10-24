@@ -1,0 +1,4 @@
+# Runtime dependencies for Ultrecon. Recon tools themselves are installed by
+# core/installer.py from core/tools_manifest.yaml -- they are not Python deps.
+PyYAML>=6.0
+requests>=2.31

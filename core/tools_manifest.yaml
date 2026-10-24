@@ -1,0 +1,1972 @@
+# Ultrecon tool manifest -- single source of truth.
+#
+# installer.py installs from this file; docs/MODULES.md is generated from it.
+# access:
+#   oss          fully free / open source
+#   free_tier    free but an optional API key/tier may be needed (off by default
+#                unless the key is configured)
+#   manual_only  useful reference, not wired into automated phases
+# install_method: go | pipx | npm | gem | git | apt_fallback | manual_note
+# kind: tool | http_api | wordlist | os_utility
+#
+# No paid-only platforms are wired in. Shodan/Censys appear only as optional
+# free-credit references and are off by default; their API is not called.
+version: 1
+updated: "2026-10-23"
+tools:
+  # =====================================================================
+  # Phase 1 -- passive OSINT & org recon
+  # =====================================================================
+  theharvester:
+    name: theHarvester
+    phase: 1
+    description: Multi-source OSINT harvester (emails, hosts, employee names).
+    binary: theHarvester
+    check_cmd: "theHarvester -h"
+    version_cmd: null
+    install_method: pipx
+    pipx_package: theHarvester
+    repo_url: https://github.com/laramies/theHarvester
+    access: oss
+    kind: tool
+  recon-ng:
+    name: Recon-ng
+    phase: 1
+    description: Modular OSINT framework with free modules.
+    binary: recon-ng
+    check_cmd: "recon-ng -h"
+    version_cmd: null
+    install_method: pipx
+    pipx_package: recon-ng
+    repo_url: https://github.com/lanmaster53/recon-ng
+    access: oss
+    kind: tool
+  spiderfoot:
+    name: SpiderFoot (OSS edition)
+    phase: 1
+    description: OSINT automation with a large free module set.
+    binary: sf.py
+    check_cmd: "sf.py -h"
+    version_cmd: null
+    install_method: git
+    git_url: https://github.com/smicallef/spiderfoot
+    build: pip
+    binary_path: sf.py
+    repo_url: https://github.com/smicallef/spiderfoot
+    access: oss
+    kind: tool
+    notes: Large Python app; auto-install is disabled by default in config.
+  sn0int:
+    name: sn0int
+    phase: 1
+    description: Semi-automatic OSINT framework and package manager.
+    binary: sn0int
+    check_cmd: "sn0int --version"
+    version_cmd: "sn0int --version"
+    install_method: apt_fallback
+    apt_package: sn0int
+    repo_url: https://github.com/kpcyrd/sn0int
+    access: oss
+    kind: tool
+    notes: Not available in every distro; falls back to a manual cargo/git install note.
+  whois:
+    name: whois
+    phase: 1
+    description: WHOIS registration and org metadata.
+    binary: whois
+    check_cmd: "whois --version"
+    version_cmd: "whois --version"
+    install_method: apt_fallback
+    apt_package: whois
+    repo_url: https://github.com/rfc1036/whois
+    access: oss
+    kind: os_utility
+  dig:
+    name: dig (BIND)
+    phase: 1
+    description: DNS lookups, CNAME/NS/MX records and zone metadata.
+    binary: dig
+    check_cmd: "dig -v"
+    version_cmd: "dig -v"
+    install_method: apt_fallback
+    apt_package: dnsutils
+    repo_url: https://bind9.readthedocs.io/
+    access: oss
+    kind: os_utility
+  host:
+    name: host
+    phase: 1
+    description: Simple DNS lookup utility.
+    binary: host
+    check_cmd: "host -V"
+    version_cmd: "host -V"
+    install_method: apt_fallback
+    apt_package: bind9-host
+    repo_url: https://bind9.readthedocs.io/
+    access: oss
+    kind: os_utility
+  nslookup:
+    name: nslookup
+    phase: 1
+    description: DNS query utility shipped with BIND.
+    binary: nslookup
+    check_cmd: "nslookup -version"
+    version_cmd: "nslookup -version"
+    install_method: apt_fallback
+    apt_package: dnsutils
+    repo_url: https://bind9.readthedocs.io/
+    access: oss
+    kind: os_utility
+  crtsh:
+    name: crt.sh
+    phase: 1
+    description: Certificate Transparency log search (built-in JSON client).
+    binary: null
+    check_cmd: null
+    version_cmd: null
+    install_method: manual_note
+    repo_url: https://crt.sh
+    access: oss
+    kind: http_api
+    default_enabled: true
+  certspotter:
+    name: CertSpotter
+    phase: 1
+    description: Certificate issuance monitoring API (optional key).
+    binary: null
+    check_cmd: null
+    version_cmd: null
+    install_method: manual_note
+    repo_url: https://sslmate.com/certspotter/
+    access: free_tier
+    kind: http_api
+    default_enabled: false
+    api_key_env: CERTSPOTTER_API_KEY
+  hackertarget:
+    name: HackerTarget API
+    phase: 1
+    description: Free rate-limited hostsearch API.
+    binary: null
+    check_cmd: null
+    version_cmd: null
+    install_method: manual_note
+    repo_url: https://hackertarget.com
+    access: free_tier
+    kind: http_api
+    default_enabled: true
+    notes: Strict rate limits; the client sends a single request per domain.
+  rapiddns:
+    name: RapidDNS
+    phase: 1
+    description: Free DNS/subdomain aggregation web service.
+    binary: null
+    check_cmd: null
+    version_cmd: null
+    install_method: manual_note
+    repo_url: https://rapiddns.io
+    access: oss
+    kind: http_api
+    default_enabled: true
+  urlscan:
+    name: urlscan.io
+    phase: 1
+    description: Public URL/domain scan search API.
+    binary: null
+    check_cmd: null
+    version_cmd: null
+    install_method: manual_note
+    repo_url: https://urlscan.io
+    access: free_tier
+    kind: http_api
+    default_enabled: false
+    api_key_env: URLSCAN_API_KEY
+  virustotal:
+    name: VirusTotal
+    phase: 1
+    description: Passive DNS / subdomain API (free tier, optional key).
+    binary: null
+    check_cmd: null
+    version_cmd: null
+    install_method: manual_note
+    repo_url: https://www.virustotal.com
+    access: free_tier
+    kind: http_api
+    default_enabled: false
+    api_key_env: VIRUSTOTAL_API_KEY
+  commoncrawl:
+    name: Common Crawl index
+    phase: 1
+    description: Public web-crawl index for URL discovery.
+    binary: null
+    check_cmd: null
+    version_cmd: null
+    install_method: manual_note
+    repo_url: https://commoncrawl.org
+    access: oss
+    kind: http_api
+    default_enabled: true
+  github-code-search:
+    name: GitHub Code Search
+    phase: 1
+    description: Public code search via the GitHub API (token required in practice).
+    binary: null
+    check_cmd: null
+    version_cmd: null
+    install_method: manual_note
+    repo_url: https://github.com/search
+    access: free_tier
+    kind: http_api
+    default_enabled: false
+    api_key_env: GITHUB_TOKEN
+  bgpview:
+    name: BGPView
+    phase: 1
+    description: Free ASN/prefix/BGP lookup API.
+    binary: null
+    check_cmd: null
+    version_cmd: null
+    install_method: manual_note
+    repo_url: https://bgpview.io
+    access: oss
+    kind: http_api
+    default_enabled: true
+  bgp-he:
+    name: Hurricane Electric BGP Toolkit
+    phase: 1
+    description: Interactive BGP looking glass and prefix browser.
+    binary: null
+    check_cmd: null
+    version_cmd: null
+    install_method: manual_note
+    repo_url: https://bgp.he.net
+    access: manual_only
+    kind: http_api
+    default_enabled: false
+    notes: Browser-oriented; use BGPView/RIPEstat for automation.
+  ripestat:
+    name: RIPEstat
+    phase: 1
+    description: Free RIPEstat data API (prefixes, ASN, routing history).
+    binary: null
+    check_cmd: null
+    version_cmd: null
+    install_method: manual_note
+    repo_url: https://stat.ripe.net
+    access: oss
+    kind: http_api
+    default_enabled: true
+  shodan:
+    name: Shodan (free credit only)
+    phase: 1
+    description: Internet-wide scan search; free credit is tiny.
+    binary: null
+    check_cmd: null
+    version_cmd: null
+    install_method: manual_note
+    repo_url: https://www.shodan.io
+    access: free_tier
+    kind: http_api
+    default_enabled: false
+    api_key_env: SHODAN_API_KEY
+    notes: Reference only. Not wired into the pipeline; paid tiers are out of scope.
+  censys:
+    name: Censys (free credit only)
+    phase: 1
+    description: Internet host/certificate search; free credit is tiny.
+    binary: null
+    check_cmd: null
+    version_cmd: null
+    install_method: manual_note
+    repo_url: https://search.censys.io
+    access: free_tier
+    kind: http_api
+    default_enabled: false
+    api_key_env: CENSYS_API_ID
+    notes: Reference only. Not wired into the pipeline; paid tiers are out of scope.
+
+  # =====================================================================
+  # Phase 2 -- subdomain enumeration (passive)
+  # =====================================================================
+  subfinder:
+    name: Subfinder
+    phase: 2
+    description: Fast passive subdomain enumeration from many free sources.
+    binary: subfinder
+    check_cmd: "subfinder -version"
+    version_cmd: "subfinder -version"
+    install_method: go
+    go_module: github.com/projectdiscovery/subfinder/v2/cmd/subfinder
+    repo_url: https://github.com/projectdiscovery/subfinder
+    access: oss
+    kind: tool
+  amass:
+    name: OWASP Amass
+    phase: 2
+    description: Passive DNS/OSINT enumeration and attack-surface mapping.
+    binary: amass
+    check_cmd: "amass -version"
+    version_cmd: "amass -version"
+    install_method: go
+    go_module: github.com/owasp-amass/amass/v4/cmd/amass
+    repo_url: https://github.com/owasp-amass/amass
+    access: oss
+    kind: tool
+    notes: Only passive mode is invoked by p02.
+  assetfinder:
+    name: Assetfinder
+    phase: 2
+    description: Find domains/subdomains from public sources.
+    binary: assetfinder
+    check_cmd: "assetfinder --help"
+    version_cmd: null
+    install_method: go
+    go_module: github.com/tomnomnom/assetfinder
+    repo_url: https://github.com/tomnomnom/assetfinder
+    access: oss
+    kind: tool
+  findomain:
+    name: Findomain
+    phase: 2
+    description: Cross-platform passive subdomain finder (Rust).
+    binary: findomain
+    check_cmd: "findomain --version"
+    version_cmd: "findomain --version"
+    install_method: git
+    git_url: https://github.com/Findomain/Findomain
+    build: prebuilt
+    release_asset: "findomain-linux|linux.*(amd64|x86_64)|(amd64|x86_64).*linux"
+    repo_url: https://github.com/Findomain/Findomain
+    access: oss
+    kind: tool
+  sublist3r:
+    name: Sublist3r
+    phase: 2
+    description: Classic passive subdomain enumeration script.
+    binary: sublist3r
+    check_cmd: "sublist3r -h"
+    version_cmd: null
+    install_method: pipx
+    pipx_package: Sublist3r
+    repo_url: https://github.com/aboul3la/Sublist3r
+    access: oss
+    kind: tool
+  oneforall:
+    name: OneForAll
+    phase: 2
+    description: Comprehensive Chinese-ecosystem subdomain collection.
+    binary: oneforall.py
+    check_cmd: "oneforall.py --help"
+    version_cmd: null
+    install_method: git
+    git_url: https://github.com/shmilylty/OneForAll
+    build: pip
+    binary_path: oneforall.py
+    repo_url: https://github.com/shmilylty/OneForAll
+    access: oss
+    kind: tool
+  chaos:
+    name: Chaos
+    phase: 2
+    description: ProjectDiscovery Chaos public bug-bounty dataset client.
+    binary: chaos
+    check_cmd: "chaos -version"
+    version_cmd: "chaos -version"
+    install_method: go
+    go_module: github.com/projectdiscovery/chaos-client/cmd/chaos
+    repo_url: https://github.com/projectdiscovery/chaos-client
+    access: free_tier
+    kind: tool
+    default_enabled: false
+    api_key_env: CHAOS_KEY
+  github-subdomains:
+    name: github-subdomains
+    phase: 2
+    description: Mine subdomains from GitHub code search.
+    binary: github-subdomains
+    check_cmd: "github-subdomains -h"
+    version_cmd: null
+    install_method: go
+    go_module: github.com/gwen001/github-subdomains
+    repo_url: https://github.com/gwen001/github-subdomains
+    access: free_tier
+    kind: tool
+    default_enabled: false
+    api_key_env: GITHUB_TOKEN
+  ctfr:
+    name: CTFR
+    phase: 2
+    description: Certificate Transparency subdomain extraction.
+    binary: ctfr
+    check_cmd: "ctfr -h"
+    version_cmd: null
+    install_method: pipx
+    pipx_package: ctfr
+    repo_url: https://github.com/UnaPibaGeek/ctfr
+    access: oss
+    kind: tool
+  bbot:
+    name: BBOT
+    phase: 2
+    description: Recursive OSINT/recon engine with free modules.
+    binary: bbot
+    check_cmd: "bbot --help"
+    version_cmd: "bbot --version"
+    install_method: pipx
+    pipx_package: bbot
+    repo_url: https://github.com/blacklanternsecurity/bbot
+    access: oss
+    kind: tool
+  reconftw:
+    name: reconFTW
+    phase: 2
+    description: Opinionated all-in-one recon framework.
+    binary: reconftw
+    check_cmd: "reconftw --help"
+    version_cmd: null
+    install_method: git
+    git_url: https://github.com/six2dez/reconftw
+    build: install_script
+    auto_install: false
+    repo_url: https://github.com/six2dez/reconftw
+    access: oss
+    kind: tool
+    default_enabled: false
+    notes: Installs a large external toolchain; intentionally not auto-installed.
+
+  # =====================================================================
+  # Phase 2 -- active brute-force / permutation (requires --active)
+  # =====================================================================
+  dnsx:
+    name: dnsx
+    phase: 2
+    description: Fast DNS toolkit for resolve/bruteforce/permutation.
+    binary: dnsx
+    check_cmd: "dnsx -version"
+    version_cmd: "dnsx -version"
+    install_method: go
+    go_module: github.com/projectdiscovery/dnsx/cmd/dnsx
+    repo_url: https://github.com/projectdiscovery/dnsx
+    access: oss
+    kind: tool
+    active: true
+  massdns:
+    name: MassDNS
+    phase: 2
+    description: High-performance bulk DNS resolver.
+    binary: massdns
+    check_cmd: "massdns --version"
+    version_cmd: "massdns --version"
+    install_method: git
+    git_url: https://github.com/blechschmidt/massdns
+    build: make
+    repo_url: https://github.com/blechschmidt/massdns
+    access: oss
+    kind: tool
+    active: true
+  shuffledns:
+    name: shuffledns
+    phase: 2
+    description: MassDNS wrapper for wildcard-aware brute force.
+    binary: shuffledns
+    check_cmd: "shuffledns -version"
+    version_cmd: "shuffledns -version"
+    install_method: go
+    go_module: github.com/projectdiscovery/shuffledns/cmd/shuffledns
+    repo_url: https://github.com/projectdiscovery/shuffledns
+    access: oss
+    kind: tool
+    active: true
+  puredns:
+    name: PureDNS
+    phase: 2
+    description: Wildcard-aware DNS bruteforce and permutation resolver.
+    binary: puredns
+    check_cmd: "puredns --version"
+    version_cmd: "puredns --version"
+    install_method: go
+    go_module: github.com/d3mondev/puredns/v2
+    repo_url: https://github.com/d3mondev/puredns
+    access: oss
+    kind: tool
+    active: true
+  alterx:
+    name: Alterx
+    phase: 2
+    description: Subdomain wordlist permutation generator.
+    binary: alterx
+    check_cmd: "alterx -version"
+    version_cmd: "alterx -version"
+    install_method: go
+    go_module: github.com/projectdiscovery/alterx/cmd/alterx
+    repo_url: https://github.com/projectdiscovery/alterx
+    access: oss
+    kind: tool
+    active: true
+  altdns:
+    name: altdns
+    phase: 2
+    description: Subdomain permutation generator.
+    binary: altdns
+    check_cmd: "altdns -h"
+    version_cmd: null
+    install_method: pipx
+    pipx_package: altdns
+    repo_url: https://github.com/infosec-au/altdns
+    access: oss
+    kind: tool
+    active: true
+  dnsgen:
+    name: dnsgen
+    phase: 2
+    description: Generate permutations from known subdomains.
+    binary: dnsgen
+    check_cmd: "dnsgen --help"
+    version_cmd: null
+    install_method: pipx
+    pipx_package: dnsgen
+    repo_url: https://github.com/ProjectAnte/dnsgen
+    access: oss
+    kind: tool
+    active: true
+  gotator:
+    name: Gotator
+    phase: 2
+    description: Fast subdomain permutation generator.
+    binary: gotator
+    check_cmd: "gotator -h"
+    version_cmd: null
+    install_method: go
+    go_module: github.com/Josue87/gotator
+    repo_url: https://github.com/Josue87/gotator
+    access: oss
+    kind: tool
+    active: true
+  dnsrecon:
+    name: dnsrecon
+    phase: 2
+    description: DNS enumeration and zone-transfer checks.
+    binary: dnsrecon
+    check_cmd: "dnsrecon --version"
+    version_cmd: "dnsrecon --version"
+    install_method: pipx
+    pipx_package: dnsrecon
+    repo_url: https://github.com/darkoperator/dnsrecon
+    access: oss
+    kind: tool
+    active: true
+  dnsenum:
+    name: dnsenum
+    phase: 2
+    description: DNS enumeration (brute force, zone transfer, Google scraping).
+    binary: dnsenum
+    check_cmd: "dnsenum --help"
+    version_cmd: null
+    install_method: apt_fallback
+    apt_package: dnsenum
+    repo_url: https://github.com/fwaeytens/dnsenum
+    access: oss
+    kind: tool
+    active: true
+  fierce:
+    name: Fierce
+    phase: 2
+    description: DNS reconnaissance and non-contiguous IP discovery.
+    binary: fierce
+    check_cmd: "fierce --help"
+    version_cmd: null
+    install_method: pipx
+    pipx_package: fierce
+    repo_url: https://github.com/mschwager/fierce
+    access: oss
+    kind: tool
+    active: true
+  dsieve:
+    name: dsieve
+    phase: 2
+    description: Filter/curate subdomain lists by level and frequency.
+    binary: dsieve
+    check_cmd: "dsieve -h"
+    version_cmd: null
+    install_method: go
+    go_module: github.com/trickest/dsieve
+    repo_url: https://github.com/trickest/dsieve
+    access: oss
+    kind: tool
+    active: true
+  subzy:
+    name: Subzy
+    phase: 2
+    description: Subdomain takeover detection.
+    binary: subzy
+    check_cmd: "subzy -h"
+    version_cmd: null
+    install_method: go
+    go_module: github.com/PentestPad/subzy
+    repo_url: https://github.com/PentestPad/subzy
+    access: oss
+    kind: tool
+    active: true
+  subjack:
+    name: Subjack
+    phase: 2
+    description: Subdomain takeover checker.
+    binary: subjack
+    check_cmd: "subjack -h"
+    version_cmd: null
+    install_method: go
+    go_module: github.com/haccer/subjack
+    repo_url: https://github.com/haccer/subjack
+    access: oss
+    kind: tool
+    active: true
+  dnsreaper:
+    name: dnsReaper
+    phase: 2
+    description: DNS takeover verification across many providers.
+    binary: dnsReaper.py
+    check_cmd: "dnsReaper.py --help"
+    version_cmd: null
+    install_method: git
+    git_url: https://github.com/punk-security/dnsReaper
+    build: pip
+    binary_path: dnsReaper.py
+    repo_url: https://github.com/punk-security/dnsReaper
+    access: oss
+    kind: tool
+    active: true
+  can-i-take-over-xyz:
+    name: can-i-take-over-xyz
+    phase: 2
+    description: Community takeover fingerprint data reference.
+    binary: null
+    check_cmd: null
+    version_cmd: null
+    install_method: manual_note
+    repo_url: https://github.com/EdOverflow/can-i-take-over-xyz
+    access: oss
+    kind: http_api
+    default_enabled: false
+    notes: Data reference for interpreting takeover fingerprints; nuclei -tags takeover is wired.
+
+  # =====================================================================
+  # Phase 3 -- ASN / IP / network mapping
+  # =====================================================================
+  asnmap:
+    name: asnmap
+    phase: 3
+    description: Map domains/IPs to ASNs from public data.
+    binary: asnmap
+    check_cmd: "asnmap -version"
+    version_cmd: "asnmap -version"
+    install_method: go
+    go_module: github.com/projectdiscovery/asnmap/cmd/asnmap
+    repo_url: https://github.com/projectdiscovery/asnmap
+    access: oss
+    kind: tool
+  mapcidr:
+    name: mapcidr
+    phase: 3
+    description: CIDR expansion, filtering and aggregation.
+    binary: mapcidr
+    check_cmd: "mapcidr -version"
+    version_cmd: "mapcidr -version"
+    install_method: go
+    go_module: github.com/projectdiscovery/mapcidr/cmd/mapcidr
+    repo_url: https://github.com/projectdiscovery/mapcidr
+    access: oss
+    kind: tool
+  hakip2host:
+    name: hakip2host
+    phase: 3
+    description: Reverse-DNS mapping from IPs back to hostnames.
+    binary: hakip2host
+    check_cmd: "hakip2host -h"
+    version_cmd: null
+    install_method: go
+    go_module: github.com/hakluke/hakip2host
+    repo_url: https://github.com/hakluke/hakip2host
+    access: oss
+    kind: tool
+
+  # =====================================================================
+  # Phase 4 -- ports & services (active only)
+  # =====================================================================
+  nmap:
+    name: Nmap
+    phase: 4
+    description: Port/service discovery and NSE scripts.
+    binary: nmap
+    check_cmd: "nmap --version"
+    version_cmd: "nmap --version"
+    install_method: apt_fallback
+    apt_package: nmap
+    repo_url: https://nmap.org
+    access: oss
+    kind: tool
+    active: true
+  naabu:
+    name: Naabu
+    phase: 4
+    description: Fast port scanner with rate limiting.
+    binary: naabu
+    check_cmd: "naabu -version"
+    version_cmd: "naabu -version"
+    install_method: go
+    go_module: github.com/projectdiscovery/naabu/v2/cmd/naabu
+    repo_url: https://github.com/projectdiscovery/naabu
+    access: oss
+    kind: tool
+    active: true
+  masscan:
+    name: Masscan
+    phase: 4
+    description: High-speed asynchronous port scanner.
+    binary: masscan
+    check_cmd: "masscan --version"
+    version_cmd: "masscan --version"
+    install_method: git
+    git_url: https://github.com/robertdavidgraham/masscan
+    build: make
+    repo_url: https://github.com/robertdavidgraham/masscan
+    access: oss
+    kind: tool
+    active: true
+  rustscan:
+    name: RustScan
+    phase: 4
+    description: Fast port discovery that hands service detection to Nmap.
+    binary: rustscan
+    check_cmd: "rustscan --version"
+    version_cmd: "rustscan --version"
+    install_method: git
+    git_url: https://github.com/RustScan/RustScan
+    build: cargo
+    repo_url: https://github.com/RustScan/RustScan
+    access: oss
+    kind: tool
+    active: true
+  fingerprintx:
+    name: FingerprintX
+    phase: 4
+    description: Service fingerprinting for open ports.
+    binary: fingerprintx
+    check_cmd: "fingerprintx --help"
+    version_cmd: null
+    install_method: go
+    go_module: github.com/praetorian-inc/fingerprintx/cmd/fingerprintx
+    repo_url: https://github.com/praetorian-inc/fingerprintx
+    access: oss
+    kind: tool
+    active: true
+  tlsx:
+    name: tlsx
+    phase: 4
+    description: TLS handshake, SAN and certificate inspection.
+    binary: tlsx
+    check_cmd: "tlsx -version"
+    version_cmd: "tlsx -version"
+    install_method: go
+    go_module: github.com/projectdiscovery/tlsx/cmd/tlsx
+    repo_url: https://github.com/projectdiscovery/tlsx
+    access: oss
+    kind: tool
+    active: true
+  testssl:
+    name: testssl.sh
+    phase: 4
+    description: TLS/SSL configuration and cipher testing.
+    binary: testssl.sh
+    check_cmd: "testssl.sh --version"
+    version_cmd: "testssl.sh --version"
+    install_method: git
+    git_url: https://github.com/testssl/testssl.sh
+    build: none
+    binary_path: testssl.sh
+    repo_url: https://github.com/testssl/testssl.sh
+    access: oss
+    kind: tool
+    active: true
+  sslyze:
+    name: SSLyze
+    phase: 4
+    description: Python TLS/SSL scanner.
+    binary: sslyze
+    check_cmd: "sslyze --version"
+    version_cmd: "sslyze --version"
+    install_method: pipx
+    pipx_package: sslyze
+    repo_url: https://github.com/nabla-c0d3/sslyze
+    access: oss
+    kind: tool
+    active: true
+
+  # =====================================================================
+  # Phase 5 -- HTTP probing & tech fingerprint
+  # =====================================================================
+  httpx:
+    name: httpx
+    phase: 5
+    description: HTTP probing, titles, tech detection and screenshots.
+    binary: httpx
+    check_cmd: "httpx -version"
+    version_cmd: "httpx -version"
+    install_method: go
+    go_module: github.com/projectdiscovery/httpx/cmd/httpx
+    repo_url: https://github.com/projectdiscovery/httpx
+    access: oss
+    kind: tool
+  httprobe:
+    name: httprobe
+    phase: 5
+    description: Simple live-host HTTP/HTTPS prober.
+    binary: httprobe
+    check_cmd: "httprobe -h"
+    version_cmd: null
+    install_method: go
+    go_module: github.com/tomnomnom/httprobe
+    repo_url: https://github.com/tomnomnom/httprobe
+    access: oss
+    kind: tool
+  whatweb:
+    name: WhatWeb
+    phase: 5
+    description: Web technology/CMS fingerprinting.
+    binary: whatweb
+    check_cmd: "whatweb --version"
+    version_cmd: "whatweb --version"
+    install_method: apt_fallback
+    apt_package: whatweb
+    repo_url: https://github.com/urbanadventurer/WhatWeb
+    access: oss
+    kind: tool
+  webanalyze:
+    name: webanalyze
+    phase: 5
+    description: Wappalyzer-compatible technology detection.
+    binary: webanalyze
+    check_cmd: "webanalyze --version"
+    version_cmd: "webanalyze --version"
+    install_method: go
+    go_module: github.com/rverton/webanalyze/cmd/webanalyze
+    repo_url: https://github.com/rverton/webanalyze
+    access: oss
+    kind: tool
+  retirejs:
+    name: Retire.js
+    phase: 5
+    description: Detect vulnerable JavaScript libraries.
+    binary: retire
+    check_cmd: "retire --version"
+    version_cmd: "retire --version"
+    install_method: npm
+    npm_package: retire
+    repo_url: https://github.com/RetireJS/retire.js
+    access: oss
+    kind: tool
+  wafw00f:
+    name: wafw00f
+    phase: 5
+    description: WAF detection and fingerprinting.
+    binary: wafw00f
+    check_cmd: "wafw00f --version"
+    version_cmd: "wafw00f --version"
+    install_method: pipx
+    pipx_package: wafw00f
+    repo_url: https://github.com/EnableSecurity/wafw00f
+    access: oss
+    kind: tool
+  cdncheck:
+    name: cdncheck
+    phase: 5
+    description: Identify CDN/WAF/cloud edge providers.
+    binary: cdncheck
+    check_cmd: "cdncheck -version"
+    version_cmd: "cdncheck -version"
+    install_method: go
+    go_module: github.com/projectdiscovery/cdncheck/cmd/cdncheck
+    repo_url: https://github.com/projectdiscovery/cdncheck
+    access: oss
+    kind: tool
+
+  # =====================================================================
+  # Phase 6 -- virtual hosts & app discovery (mixed)
+  # =====================================================================
+  gowitness:
+    name: GoWitness
+    phase: 6
+    description: Web screenshotting and reporting.
+    binary: gowitness
+    check_cmd: "gowitness version"
+    version_cmd: "gowitness version"
+    install_method: go
+    go_module: github.com/sensepost/gowitness
+    repo_url: https://github.com/sensepost/gowitness
+    access: oss
+    kind: tool
+    active: true
+
+  # =====================================================================
+  # Phase 7 -- crawling & endpoint discovery
+  # =====================================================================
+  katana:
+    name: Katana
+    phase: 7
+    description: Next-generation web crawler with JS parsing.
+    binary: katana
+    check_cmd: "katana -version"
+    version_cmd: "katana -version"
+    install_method: go
+    go_module: github.com/projectdiscovery/katana/cmd/katana
+    repo_url: https://github.com/projectdiscovery/katana
+    access: oss
+    kind: tool
+  gospider:
+    name: GoSpider
+    phase: 7
+    description: Fast web spidering and URL collection.
+    binary: gospider
+    check_cmd: "gospider --version"
+    version_cmd: "gospider --version"
+    install_method: go
+    go_module: github.com/jaeles-project/gospider
+    repo_url: https://github.com/jaeles-project/gospider
+    access: oss
+    kind: tool
+  hakrawler:
+    name: Hakrawler
+    phase: 7
+    description: Simple, fast web crawler for URLs and JS.
+    binary: hakrawler
+    check_cmd: "hakrawler -h"
+    version_cmd: null
+    install_method: go
+    go_module: github.com/hakluke/hakrawler
+    repo_url: https://github.com/hakluke/hakrawler
+    access: oss
+    kind: tool
+  cariddi:
+    name: Cariddi
+    phase: 7
+    description: Crawl URLs and scan for secrets, endpoints, extensions.
+    binary: cariddi
+    check_cmd: "cariddi -version"
+    version_cmd: "cariddi -version"
+    install_method: go
+    go_module: github.com/edoardottt/cariddi/cmd/cariddi
+    repo_url: https://github.com/edoardottt/cariddi
+    access: oss
+    kind: tool
+  gau:
+    name: GAU
+    phase: 7
+    description: Fetch known URLs from AlienVault, Wayback, Common Crawl and more.
+    binary: gau
+    check_cmd: "gau --version"
+    version_cmd: "gau --version"
+    install_method: go
+    go_module: github.com/lc/gau/v2/cmd/gau
+    repo_url: https://github.com/lc/gau
+    access: oss
+    kind: tool
+  waybackurls:
+    name: waybackurls
+    phase: 7
+    description: Fetch URLs from the Wayback Machine.
+    binary: waybackurls
+    check_cmd: "waybackurls -h"
+    version_cmd: null
+    install_method: go
+    go_module: github.com/tomnomnom/waybackurls
+    repo_url: https://github.com/tomnomnom/waybackurls
+    access: oss
+    kind: tool
+  waymore:
+    name: Waymore
+    phase: 7
+    description: Comprehensive Wayback/Common Crawl/URLScan URL discovery.
+    binary: waymore
+    check_cmd: "waymore --help"
+    version_cmd: null
+    install_method: pipx
+    pipx_package: waymore
+    repo_url: https://github.com/xnl-h4ck3r/waymore
+    access: oss
+    kind: tool
+  urlfinder:
+    name: URLFinder
+    phase: 7
+    description: Extract URLs/endpoints from web assets.
+    binary: urlfinder
+    check_cmd: "urlfinder -h"
+    version_cmd: null
+    install_method: go
+    go_module: github.com/praetorian-inc/urlfinder/cmd/urlfinder
+    repo_url: https://github.com/praetorian-inc/urlfinder
+    access: oss
+    kind: tool
+  unfurl:
+    name: unfurl
+    phase: 7
+    description: Parse and filter URLs by path/key/value components.
+    binary: unfurl
+    check_cmd: "unfurl -h"
+    version_cmd: null
+    install_method: go
+    go_module: github.com/tomnomnom/unfurl
+    repo_url: https://github.com/tomnomnom/unfurl
+    access: oss
+    kind: tool
+  uro:
+    name: uro
+    phase: 7
+    description: Deduplicate URLs by removing dead/duplicate endpoints.
+    binary: uro
+    check_cmd: "uro --version"
+    version_cmd: "uro --version"
+    install_method: pipx
+    pipx_package: uro
+    repo_url: https://github.com/s0md3v/uro
+    access: oss
+    kind: tool
+  anew:
+    name: anew
+    phase: 7
+    description: Append only new lines to a file.
+    binary: anew
+    check_cmd: "anew -h"
+    version_cmd: null
+    install_method: go
+    go_module: github.com/tomnomnom/anew
+    repo_url: https://github.com/tomnomnom/anew
+    access: oss
+    kind: tool
+  gf:
+    name: gf
+    phase: 7
+    description: Grep patterns for URLs/parameters (tomnomnom).
+    binary: gf
+    check_cmd: "gf -h"
+    version_cmd: null
+    install_method: go
+    go_module: github.com/tomnomnom/gf
+    repo_url: https://github.com/tomnomnom/gf
+    access: oss
+    kind: tool
+  gron:
+    name: gron
+    phase: 7
+    description: Make JSON greppable (also useful for API responses).
+    binary: gron
+    check_cmd: "gron --version"
+    version_cmd: "gron --version"
+    install_method: go
+    go_module: github.com/tomnomnom/gron
+    repo_url: https://github.com/tomnomnom/gron
+    access: oss
+    kind: tool
+  qsreplace:
+    name: qsreplace
+    phase: 7
+    description: Replace query-string values for parameter testing.
+    binary: qsreplace
+    check_cmd: "qsreplace -h"
+    version_cmd: null
+    install_method: go
+    go_module: github.com/tomnomnom/qsreplace
+    repo_url: https://github.com/tomnomnom/qsreplace
+    access: oss
+    kind: tool
+
+  # =====================================================================
+  # Phase 8 -- content discovery (active only) + wordlists
+  # =====================================================================
+  ffuf:
+    name: ffuf
+    phase: 8
+    description: Fast web fuzzer for content/vhost/parameter discovery.
+    binary: ffuf
+    check_cmd: "ffuf -V"
+    version_cmd: "ffuf -V"
+    install_method: go
+    go_module: github.com/ffuf/ffuf/v2
+    repo_url: https://github.com/ffuf/ffuf
+    access: oss
+    kind: tool
+    active: true
+  feroxbuster:
+    name: Feroxbuster
+    phase: 8
+    description: Recursive content discovery in Rust.
+    binary: feroxbuster
+    check_cmd: "feroxbuster --version"
+    version_cmd: "feroxbuster --version"
+    install_method: git
+    git_url: https://github.com/epi052/feroxbuster
+    build: prebuilt
+    release_asset: "x86_64.*linux|x86_64-linux|linux.*x86_64"
+    repo_url: https://github.com/epi052/feroxbuster
+    access: oss
+    kind: tool
+    active: true
+  gobuster:
+    name: Gobuster
+    phase: 8
+    description: Directory/DNS/vhost brute forcing.
+    binary: gobuster
+    check_cmd: "gobuster version"
+    version_cmd: "gobuster version"
+    install_method: go
+    go_module: github.com/OJ/gobuster/v3
+    repo_url: https://github.com/OJ/gobuster
+    access: oss
+    kind: tool
+    active: true
+  dirsearch:
+    name: Dirsearch
+    phase: 8
+    description: Web path scanner.
+    binary: dirsearch
+    check_cmd: "dirsearch --version"
+    version_cmd: "dirsearch --version"
+    install_method: pipx
+    pipx_package: dirsearch
+    repo_url: https://github.com/maurosoria/dirsearch
+    access: oss
+    kind: tool
+    active: true
+  wfuzz:
+    name: Wfuzz
+    phase: 8
+    description: Flexible web fuzzer.
+    binary: wfuzz
+    check_cmd: "wfuzz --version"
+    version_cmd: "wfuzz --version"
+    install_method: pipx
+    pipx_package: wfuzz
+    repo_url: https://github.com/xmendez/wfuzz
+    access: oss
+    kind: tool
+    active: true
+  cewl:
+    name: CeWL
+    phase: 8
+    description: Generate custom wordlists by crawling a target.
+    binary: cewl
+    check_cmd: "cewl --version"
+    version_cmd: "cewl --version"
+    install_method: apt_fallback
+    apt_package: cewl
+    repo_url: https://github.com/digininja/CeWL
+    access: oss
+    kind: tool
+    active: true
+  seclists:
+    name: SecLists
+    phase: 8
+    description: The standard collection of security wordlists.
+    binary: null
+    check_cmd: null
+    version_cmd: null
+    install_method: git
+    repo_url: https://github.com/danielmiessler/SecLists
+    access: oss
+    kind: wordlist
+    path: wordlists/SecLists
+    default_enabled: true
+  assetnote-wordlists:
+    name: Assetnote Wordlists
+    phase: 8
+    description: High-quality content/API wordlists from Assetnote.
+    binary: null
+    check_cmd: null
+    version_cmd: null
+    install_method: git
+    repo_url: https://github.com/assetnote/wordlists
+    access: oss
+    kind: wordlist
+    path: wordlists/Assetnote
+    default_enabled: false
+  fuzzdb:
+    name: FuzzDB
+    phase: 8
+    description: Attack/fuzz payload and discovery wordlists.
+    binary: null
+    check_cmd: null
+    version_cmd: null
+    install_method: git
+    repo_url: https://github.com/fuzzdb-project/fuzzdb
+    access: oss
+    kind: wordlist
+    path: wordlists/FuzzDB
+    default_enabled: false
+  robotsdisallowed:
+    name: RobotsDisallowed
+    phase: 8
+    description: Paths harvested from robots.txt files.
+    binary: null
+    check_cmd: null
+    version_cmd: null
+    install_method: git
+    repo_url: https://github.com/danielmiessler/RobotsDisallowed
+    access: oss
+    kind: wordlist
+    path: wordlists/RobotsDisallowed
+    default_enabled: false
+
+  # =====================================================================
+  # Phase 9 -- JavaScript recon
+  # =====================================================================
+  subjs:
+    name: subjs
+    phase: 9
+    description: Extract JavaScript file URLs from pages.
+    binary: subjs
+    check_cmd: "subjs -h"
+    version_cmd: null
+    install_method: go
+    go_module: github.com/lc/subjs
+    repo_url: https://github.com/lc/subjs
+    access: oss
+    kind: tool
+  getjs:
+    name: getJS
+    phase: 9
+    description: Fetch and enumerate JavaScript sources from a URL.
+    binary: getJS
+    check_cmd: "getJS -h"
+    version_cmd: null
+    install_method: go
+    go_module: github.com/003random/getJS
+    repo_url: https://github.com/003random/getJS
+    access: oss
+    kind: tool
+  linkfinder:
+    name: LinkFinder
+    phase: 9
+    description: Discover endpoints and URLs inside JavaScript files.
+    binary: linkfinder
+    check_cmd: "linkfinder -h"
+    version_cmd: null
+    install_method: pipx
+    pipx_package: linkfinder
+    repo_url: https://github.com/GerbenJavado/LinkFinder
+    access: oss
+    kind: tool
+  xnlinkfinder:
+    name: xnLinkFinder
+    phase: 9
+    description: Advanced endpoint/link extraction from JS and responses.
+    binary: xnLinkFinder
+    check_cmd: "xnLinkFinder -h"
+    version_cmd: null
+    install_method: pipx
+    pipx_package: xnLinkFinder
+    repo_url: https://github.com/xnl-h4ck3r/xnLinkFinder
+    access: oss
+    kind: tool
+  jsluice:
+    name: Jsluice
+    phase: 9
+    description: Extract URLs, paths and secrets from JavaScript (fast Go tool).
+    binary: jsluice
+    check_cmd: "jsluice --help"
+    version_cmd: null
+    install_method: go
+    go_module: github.com/BishopFox/jsluice/cmd/jsluice
+    repo_url: https://github.com/BishopFox/jsluice
+    access: oss
+    kind: tool
+  secretfinder:
+    name: SecretFinder
+    phase: 9
+    description: Find API keys/tokens/secrets inside JavaScript.
+    binary: SecretFinder.py
+    check_cmd: "SecretFinder.py -h"
+    version_cmd: null
+    install_method: pipx
+    pipx_package: "git+https://github.com/m4ll0k/SecretFinder.git"
+    repo_url: https://github.com/m4ll0k/SecretFinder
+    access: oss
+    kind: tool
+    notes: Upstream does not publish a console entry point; built-in secret scanning is the fallback.
+  sourcemapper:
+    name: Sourcemapper
+    phase: 9
+    description: Recover original source from exposed JavaScript source maps.
+    binary: sourcemapper
+    check_cmd: "sourcemapper -h"
+    version_cmd: null
+    install_method: go
+    go_module: github.com/denandz/sourcemapper
+    repo_url: https://github.com/denandz/sourcemapper
+    access: oss
+    kind: tool
+
+  # =====================================================================
+  # Phase 10 -- hidden parameters & routes (mixed)
+  # =====================================================================
+  arjun:
+    name: Arjun
+    phase: 10
+    description: HTTP parameter discovery.
+    binary: arjun
+    check_cmd: "arjun --version"
+    version_cmd: "arjun --version"
+    install_method: pipx
+    pipx_package: arjun
+    repo_url: https://github.com/s0md3v/Arjun
+    access: oss
+    kind: tool
+    active: true
+  paramspider:
+    name: ParamSpider
+    phase: 10
+    description: Mine parameterized URLs from public archives.
+    binary: paramspider
+    check_cmd: "paramspider -h"
+    version_cmd: null
+    install_method: pipx
+    pipx_package: paramspider
+    repo_url: https://github.com/devanshbatham/ParamSpider
+    access: oss
+    kind: tool
+  x8:
+    name: x8
+    phase: 10
+    description: Hidden parameter discovery (Rust).
+    binary: x8
+    check_cmd: "x8 --version"
+    version_cmd: "x8 --version"
+    install_method: git
+    git_url: https://github.com/Sh1Yo/x8
+    build: cargo
+    repo_url: https://github.com/Sh1Yo/x8
+    access: oss
+    kind: tool
+    active: true
+  kiterunner:
+    name: Kiterunner
+    phase: 10
+    description: API route/content discovery using Assetnote wordlists.
+    binary: kr
+    check_cmd: "kr version"
+    version_cmd: "kr version"
+    install_method: go
+    go_module: github.com/assetnote/kiterunner/cmd/kr
+    repo_url: https://github.com/assetnote/kiterunner
+    access: oss
+    kind: tool
+    active: true
+  noir:
+    name: OWASP Noir
+    phase: 10
+    description: Static route/endpoint discovery from source code.
+    binary: noir
+    check_cmd: "noir --version"
+    version_cmd: "noir --version"
+    install_method: go
+    go_module: github.com/owasp-noir/noir/cmd/noir
+    repo_url: https://github.com/owasp-noir/noir
+    access: oss
+    kind: tool
+  zap:
+    name: OWASP ZAP
+    phase: 10
+    description: Free headless web proxy/scanner; passive baseline and gated active scan.
+    binary: zap.sh
+    check_cmd: "zap.sh -version"
+    version_cmd: "zap.sh -version"
+    install_method: apt_fallback
+    apt_package: zaproxy
+    repo_url: https://www.zaproxy.org
+    access: oss
+    kind: tool
+    active: true
+    notes: Used in headless/API mode only; active scan profiles are gated by --active.
+  mitmproxy:
+    name: mitmproxy
+    phase: 10
+    description: Interactive interception proxy (manual traffic analysis).
+    binary: mitmproxy
+    check_cmd: "mitmproxy --version"
+    version_cmd: "mitmproxy --version"
+    install_method: pipx
+    pipx_package: mitmproxy
+    repo_url: https://mitmproxy.org
+    access: oss
+    kind: tool
+
+  # =====================================================================
+  # Phase 11 -- REST API recon (mixed)
+  # =====================================================================
+  swagger-ui:
+    name: Swagger Editor/UI
+    phase: 11
+    description: Local OpenAPI editor/renderer for reviewing recovered specs.
+    binary: null
+    check_cmd: null
+    version_cmd: null
+    install_method: manual_note
+    repo_url: https://github.com/swagger-api/swagger-ui
+    access: oss
+    kind: http_api
+    default_enabled: false
+    notes: Run locally via Docker/npm; not a scanning CLI and not auto-installed.
+  spectral:
+    name: Spectral
+    phase: 11
+    description: OpenAPI/AsyncAPI linting and rule checks.
+    binary: spectral
+    check_cmd: "spectral --version"
+    version_cmd: "spectral --version"
+    install_method: npm
+    npm_package: "@stoplight/spectral-cli"
+    repo_url: https://github.com/stoplightio/spectral
+    access: oss
+    kind: tool
+  oasdiff:
+    name: oasdiff
+    phase: 11
+    description: OpenAPI spec diffing and breaking-change detection.
+    binary: oasdiff
+    check_cmd: "oasdiff --version"
+    version_cmd: "oasdiff --version"
+    install_method: go
+    go_module: github.com/oasdiff/oasdiff
+    repo_url: https://github.com/oasdiff/oasdiff
+    access: oss
+    kind: tool
+  schemathesis:
+    name: Schemathesis
+    phase: 11
+    description: Property-based API schema fuzzing (active, gated).
+    binary: schemathesis
+    check_cmd: "schemathesis --version"
+    version_cmd: "schemathesis --version"
+    install_method: pipx
+    pipx_package: schemathesis
+    repo_url: https://github.com/schemathesis/schemathesis
+    access: oss
+    kind: tool
+    active: true
+  restler:
+    name: RESTler
+    phase: 11
+    description: Stateful REST API fuzzing (active, gated).
+    binary: restler
+    check_cmd: "restler --help"
+    version_cmd: null
+    install_method: git
+    git_url: https://github.com/microsoft/restler-fuzzer
+    build: custom
+    auto_install: false
+    repo_url: https://github.com/microsoft/restler-fuzzer
+    access: oss
+    kind: tool
+    active: true
+    notes: Python/.NET build toolchain; install manually and wire only for authorized tests.
+  builtin-openapi:
+    name: Built-in OpenAPI/Swagger probe
+    phase: 11
+    description: Rate-limited GET probe for common spec paths (built-in).
+    binary: null
+    check_cmd: null
+    version_cmd: null
+    install_method: manual_note
+    repo_url: https://github.com/fx-sys/Ultrecon
+    access: oss
+    kind: http_api
+    default_enabled: true
+
+  # =====================================================================
+  # Phase 12 -- GraphQL recon (mixed)
+  # =====================================================================
+  graphql-cop:
+    name: graphql-cop
+    phase: 12
+    description: GraphQL security misconfiguration checks.
+    binary: graphql-cop
+    check_cmd: "graphql-cop --help"
+    version_cmd: null
+    install_method: pipx
+    pipx_package: graphql-cop
+    repo_url: https://github.com/dolevf/graphql-cop
+    access: oss
+    kind: tool
+    active: true
+  clairvoyance:
+    name: Clairvoyance
+    phase: 12
+    description: Schema recovery when introspection is disabled.
+    binary: clairvoyance
+    check_cmd: "clairvoyance --help"
+    version_cmd: null
+    install_method: pipx
+    pipx_package: clairvoyance
+    repo_url: https://github.com/nikitastupin/clairvoyance
+    access: oss
+    kind: tool
+    active: true
+  get-graphql-schema:
+    name: get-graphql-schema
+    phase: 12
+    description: Download a GraphQL schema via introspection/IDL.
+    binary: get-graphql-schema
+    check_cmd: "get-graphql-schema --version"
+    version_cmd: "get-graphql-schema --version"
+    install_method: npm
+    npm_package: get-graphql-schema
+    repo_url: https://github.com/prisma-labs/get-graphql-schema
+    access: oss
+    kind: tool
+    active: true
+  graphqlmap:
+    name: GraphQLmap
+    phase: 12
+    description: GraphQL endpoint interaction and enumeration helper.
+    binary: graphqlmap
+    check_cmd: "graphqlmap --help"
+    version_cmd: null
+    install_method: pipx
+    pipx_package: graphqlmap
+    repo_url: https://github.com/swisskyrepo/GraphQLmap
+    access: oss
+    kind: tool
+    active: true
+  graphql-path-enum:
+    name: graphql-path-enum
+    phase: 12
+    description: Enumerate GraphQL query paths from a recovered schema.
+    binary: graphql-path-enum
+    check_cmd: "graphql-path-enum -h"
+    version_cmd: null
+    install_method: go
+    go_module: github.com/Escape-Technologies/graphql-path-enum
+    repo_url: https://github.com/Escape-Technologies/graphql-path-enum
+    access: oss
+    kind: tool
+    active: true
+  builtin-graphql:
+    name: Built-in GraphQL detector
+    phase: 12
+    description: Passive endpoint detection; optional read-only introspection under --active.
+    binary: null
+    check_cmd: null
+    version_cmd: null
+    install_method: manual_note
+    repo_url: https://github.com/fx-sys/Ultrecon
+    access: oss
+    kind: http_api
+    default_enabled: true
+
+  # =====================================================================
+  # Phase 13 -- other protocols (gRPC, SOAP, WebSocket)
+  # =====================================================================
+  grpcurl:
+    name: grpcurl
+    phase: 13
+    description: gRPC reflection and service/method enumeration.
+    binary: grpcurl
+    check_cmd: "grpcurl -version"
+    version_cmd: "grpcurl -version"
+    install_method: go
+    go_module: github.com/fullstorydev/grpcurl/cmd/grpcurl
+    repo_url: https://github.com/fullstorydev/grpcurl
+    access: oss
+    kind: tool
+    active: true
+  grpcui:
+    name: grpcui
+    phase: 13
+    description: Browser UI for gRPC reflection (manual review).
+    binary: grpcui
+    check_cmd: "grpcui -version"
+    version_cmd: "grpcui -version"
+    install_method: go
+    go_module: github.com/fullstorydev/grpcui/cmd/grpcui
+    repo_url: https://github.com/fullstorydev/grpcui
+    access: oss
+    kind: tool
+    active: true
+  websocat:
+    name: websocat
+    phase: 13
+    description: WebSocket client for protocol probing.
+    binary: websocat
+    check_cmd: "websocat --version"
+    version_cmd: "websocat --version"
+    install_method: git
+    git_url: https://github.com/vi/websocat
+    build: cargo
+    repo_url: https://github.com/vi/websocat
+    access: oss
+    kind: tool
+    active: true
+  wscat:
+    name: wscat
+    phase: 13
+    description: Simple Node WebSocket client.
+    binary: wscat
+    check_cmd: "wscat --version"
+    version_cmd: "wscat --version"
+    install_method: npm
+    npm_package: wscat
+    repo_url: https://github.com/websockets/wscat
+    access: oss
+    kind: tool
+    active: true
+  soapui:
+    name: SoapUI OSS edition
+    phase: 13
+    description: Manual SOAP/WSDL testing GUI.
+    binary: null
+    check_cmd: null
+    version_cmd: null
+    install_method: manual_note
+    repo_url: https://www.soapui.org
+    access: manual_only
+    kind: http_api
+    default_enabled: false
+  builtin-other-protocols:
+    name: Built-in protocol inventory
+    phase: 13
+    description: Passive WSDL/ASMX/WebSocket/gRPC URL classification (built-in).
+    binary: null
+    check_cmd: null
+    version_cmd: null
+    install_method: manual_note
+    repo_url: https://github.com/fx-sys/Ultrecon
+    access: oss
+    kind: http_api
+    default_enabled: true
+
+  # =====================================================================
+  # Phase 14 -- cloud assets (passive / own-account only)
+  # =====================================================================
+  cloudlist:
+    name: Cloudlist
+    phase: 14
+    description: Reference for explicitly configured account inventory; not invoked by built-in p14.
+    binary: cloudlist
+    check_cmd: "cloudlist -version"
+    version_cmd: "cloudlist -version"
+    install_method: go
+    go_module: github.com/projectdiscovery/cloudlist/cmd/cloudlist
+    repo_url: https://github.com/projectdiscovery/cloudlist
+    access: oss
+    kind: tool
+  cloud-enum:
+    name: cloud_enum
+    phase: 14
+    description: Reference only; not invoked by the built-in p14 inventory importer.
+    binary: cloud_enum
+    check_cmd: "cloud_enum -h"
+    version_cmd: null
+    install_method: pipx
+    pipx_package: cloud_enum
+    repo_url: https://github.com/initstring/cloud_enum
+    access: oss
+    kind: tool
+    active: true
+  s3scanner:
+    name: S3Scanner
+    phase: 14
+    description: Reference only; not invoked by the built-in p14 inventory importer.
+    binary: s3scanner
+    check_cmd: "s3scanner --version"
+    version_cmd: "s3scanner --version"
+    install_method: go
+    go_module: github.com/sa7mon/S3Scanner
+    repo_url: https://github.com/sa7mon/S3Scanner
+    access: oss
+    kind: tool
+    active: true
+  prowler:
+    name: Prowler
+    phase: 14
+    description: Reference only; not invoked by the built-in p14 inventory importer.
+    binary: prowler
+    check_cmd: "prowler --version"
+    version_cmd: "prowler --version"
+    install_method: pipx
+    pipx_package: prowler
+    repo_url: https://github.com/prowler-cloud/prowler
+    access: oss
+    kind: tool
+  scoutsuite:
+    name: ScoutSuite
+    phase: 14
+    description: Reference only; not invoked by the built-in p14 inventory importer.
+    binary: scoutsuite
+    check_cmd: "scoutsuite --version"
+    version_cmd: "scoutsuite --version"
+    install_method: pipx
+    pipx_package: scoutsuite
+    repo_url: https://github.com/nccgroup/ScoutSuite
+    access: oss
+    kind: tool
+  cloudsplaining:
+    name: CloudSplaining
+    phase: 14
+    description: Reference only; not invoked by the built-in p14 inventory importer.
+    binary: cloudsplaining
+    check_cmd: "cloudsplaining --version"
+    version_cmd: "cloudsplaining --version"
+    install_method: pipx
+    pipx_package: cloudsplaining
+    repo_url: https://github.com/salesforce/cloudsplaining
+    access: oss
+    kind: tool
+
+  # =====================================================================
+  # Phase 15 -- git & secrets
+  # =====================================================================
+  gitleaks:
+    name: Gitleaks
+    phase: 15
+    description: Detect hardcoded secrets in files and git history.
+    binary: gitleaks
+    check_cmd: "gitleaks version"
+    version_cmd: "gitleaks version"
+    install_method: go
+    go_module: github.com/gitleaks/gitleaks/v8
+    repo_url: https://github.com/gitleaks/gitleaks
+    access: oss
+    kind: tool
+  trufflehog:
+    name: TruffleHog
+    phase: 15
+    description: Entropy and verified-secret scanning.
+    binary: trufflehog
+    check_cmd: "trufflehog --version"
+    version_cmd: "trufflehog --version"
+    install_method: go
+    go_module: github.com/trufflesecurity/trufflehog/v3
+    repo_url: https://github.com/trufflesecurity/trufflehog
+    access: oss
+    kind: tool
+  detect-secrets:
+    name: detect-secrets
+    phase: 15
+    description: Yelp secret scanner with baseline support.
+    binary: detect-secrets
+    check_cmd: "detect-secrets --version"
+    version_cmd: "detect-secrets --version"
+    install_method: pipx
+    pipx_package: detect-secrets
+    repo_url: https://github.com/Yelp/detect-secrets
+    access: oss
+    kind: tool
+  noseyparker:
+    name: Nosey Parker
+    phase: 15
+    description: Fast secret scanning across large filesystem/git datasets.
+    binary: noseyparker
+    check_cmd: "noseyparker --version"
+    version_cmd: "noseyparker --version"
+    install_method: git
+    git_url: https://github.com/praetorian-inc/noseyparker
+    build: cargo
+    repo_url: https://github.com/praetorian-inc/noseyparker
+    access: oss
+    kind: tool
+  gitdorker:
+    name: GitDorker
+    phase: 15
+    description: GitHub dorking helper (search only, no exploitation).
+    binary: GitDorker
+    check_cmd: "GitDorker -h"
+    version_cmd: null
+    install_method: pipx
+    pipx_package: GitDorker
+    repo_url: https://github.com/obheda12/GitDorker
+    access: oss
+    kind: tool
+  semgrep:
+    name: Semgrep
+    phase: 15
+    description: Static analysis with free community rules.
+    binary: semgrep
+    check_cmd: "semgrep --version"
+    version_cmd: "semgrep --version"
+    install_method: pipx
+    pipx_package: semgrep
+    repo_url: https://semgrep.dev
+    access: oss
+    kind: tool
+  builtin-git-exposure:
+    name: Built-in git exposure check
+    phase: 15
+    description: Rate-limited checks for exposed .git metadata and env files (built-in).
+    binary: null
+    check_cmd: null
+    version_cmd: null
+    install_method: manual_note
+    repo_url: https://github.com/fx-sys/Ultrecon
+    access: oss
+    kind: http_api
+    default_enabled: true
+
+  # =====================================================================
+  # Phase 16 -- CMS/framework fingerprint
+  # =====================================================================
+  wpscan:
+    name: WPScan
+    phase: 16
+    description: WordPress fingerprinting and vulnerability data (free token optional).
+    binary: wpscan
+    check_cmd: "wpscan --version"
+    version_cmd: "wpscan --version"
+    install_method: gem
+    gem_package: wpscan
+    repo_url: https://github.com/wpscanteam/wpscan
+    access: free_tier
+    kind: tool
+    default_enabled: true
+    api_key_env: WPSCAN_API_TOKEN
+    notes: The scanner itself is free; the vulnerability database token is optional.
+  droopescan:
+    name: droopescan
+    phase: 16
+    description: Drupal/WordPress/Joomla/SilverStripe enumeration.
+    binary: droopescan
+    check_cmd: "droopescan --help"
+    version_cmd: null
+    install_method: pipx
+    pipx_package: droopescan
+    repo_url: https://github.com/SamJoan/droopescan
+    access: oss
+    kind: tool
+  joomscan:
+    name: JoomScan
+    phase: 16
+    description: Joomla vulnerability and configuration scanner.
+    binary: joomscan.pl
+    check_cmd: "joomscan.pl --help"
+    version_cmd: null
+    install_method: git
+    git_url: https://github.com/OWASP/joomscan
+    build: none
+    binary_path: joomscan.pl
+    repo_url: https://github.com/OWASP/joomscan
+    access: oss
+    kind: tool
+  cmseek:
+    name: CMSeeK
+    phase: 16
+    description: CMS detection and basic enumeration.
+    binary: cmseek
+    check_cmd: "cmseek --help"
+    version_cmd: null
+    install_method: pipx
+    pipx_package: cmseek
+    repo_url: https://github.com/Tuhinshubhra/CMSeeK
+    access: oss
+    kind: tool
+
+  # =====================================================================
+  # Phase 17 -- vulnerability verification (active only)
+  # =====================================================================
+  nuclei:
+    name: Nuclei
+    phase: 17
+    description: Template-based verification using community templates.
+    binary: nuclei
+    check_cmd: "nuclei -version"
+    version_cmd: "nuclei -version"
+    install_method: go
+    go_module: github.com/projectdiscovery/nuclei/v3/cmd/nuclei
+    repo_url: https://github.com/projectdiscovery/nuclei
+    access: oss
+    kind: tool
+    active: true
+    notes: Community templates only; -tags takeover is also used by p02.
+  nikto:
+    name: Nikto
+    phase: 17
+    description: Web server misconfiguration and known-file checks.
+    binary: nikto
+    check_cmd: "nikto -Version"
+    version_cmd: "nikto -Version"
+    install_method: apt_fallback
+    apt_package: nikto
+    repo_url: https://github.com/sullo/nikto
+    access: oss
+    kind: tool
+    active: true
+
+  # =====================================================================
+  # Shared data-processing utilities (used across phases)
+  # =====================================================================
+  jq:
+    name: jq
+    phase: 7
+    description: JSON query/transform utility.
+    binary: jq
+    check_cmd: "jq --version"
+    version_cmd: "jq --version"
+    install_method: apt_fallback
+    apt_package: jq
+    repo_url: https://github.com/jqlang/jq
+    access: oss
+    kind: os_utility
+  parallel:
+    name: GNU parallel
+    phase: 7
+    description: Parallel execution utility.
+    binary: parallel
+    check_cmd: "parallel --version"
+    version_cmd: "parallel --version"
+    install_method: apt_fallback
+    apt_package: parallel
+    repo_url: https://www.gnu.org/software/parallel/
+    access: oss
+    kind: os_utility
+  awk:
+    name: awk (gawk)
+    phase: 7
+    description: Text processing utility.
+    binary: awk
+    check_cmd: "awk --version"
+    version_cmd: "awk --version"
+    install_method: apt_fallback
+    apt_package: gawk
+    repo_url: https://www.gnu.org/software/gawk/
+    access: oss
+    kind: os_utility
+  sed:
+    name: sed
+    phase: 7
+    description: Stream editor used in native tool pipelines.
+    binary: sed
+    check_cmd: "sed --version"
+    version_cmd: "sed --version"
+    install_method: apt_fallback
+    apt_package: sed
+    repo_url: https://www.gnu.org/software/sed/
+    access: oss
+    kind: os_utility
+  sort:
+    name: sort (coreutils)
+    phase: 7
+    description: Sort/deduplicate text pipelines.
+    binary: sort
+    check_cmd: "sort --version"
+    version_cmd: "sort --version"
+    install_method: apt_fallback
+    apt_package: coreutils
+    repo_url: https://www.gnu.org/software/coreutils/
+    access: oss
+    kind: os_utility
+  uniq:
+    name: uniq (coreutils)
+    phase: 7
+    description: Deduplicate sorted text pipelines.
+    binary: uniq
+    check_cmd: "uniq --version"
+    version_cmd: "uniq --version"
+    install_method: apt_fallback
+    apt_package: coreutils
+    repo_url: https://www.gnu.org/software/coreutils/
+    access: oss
+    kind: os_utility

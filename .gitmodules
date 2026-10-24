@@ -1,0 +1,3 @@
+[submodule "wordlists/SecLists"]
+	path = wordlists/SecLists
+	url = https://github.com/danielmiessler/SecLists.git

@@ -1,0 +1,184 @@
+# Ultrecon default configuration. Copy this file, edit it, and pass it with
+# --config. Values here are conservative on purpose: recon traffic can look
+# like an attack and many bug bounty programs revoke access for aggressive
+# scanning. Raise limits only within the program's rules.
+version: 1
+
+run:
+  # Concurrency hint passed to tools that support it.
+  threads: 10
+  # Global requests/second ceiling for built-in HTTP modules and tools that
+  # accept a rate flag. Keep this conservative.
+  rate_limit: 50
+  # Per-request and per-tool timeouts (seconds).
+  timeout: 20
+  connect_timeout: 10
+  retries: 2
+  # Ceiling for a single external tool invocation.
+  tool_timeout: 300
+  user_agent: "Ultrecon/0.1.0 (+https://github.com/fx-sys/Ultrecon; authorized recon)"
+  max_redirects: 5
+
+http:
+  # Recon targets frequently have self-signed / stale TLS certificates. Keep
+  # verification off for probing only -- Ultrecon never submits credentials.
+  verify_tls: false
+  max_bytes: 2097152
+  max_workers: 10
+  allow_private_ips: false
+
+scope:
+  # A bare domain entry (example.com) permits its subdomains as well as the
+  # apex. Set to false for strict apex-only matching. A *.example.com entry
+  # permits subdomains only. Other '*' patterns match within individual DNS
+  # labels and are never expanded or used as probe seeds.
+  include_subdomains: true
+  # Drop rows whose host is outside the resolved scope.
+  enforce: true
+  max_targets: 10000
+
+install:
+  # Detect-and-auto-install is the default strategy. Use --no-install to skip
+  # installation and run only the built-in passive modules that can work.
+  auto: true
+  timeout: 900
+  # Tools that must never be auto-installed (large frameworks, invasive
+  # installer scripts). They are still detected and reported by --check-deps.
+  never_install: [reconftw, spiderfoot]
+
+output:
+  keep_raw: true
+
+# API keys are read from these environment variables. Free-tier sources are
+# off by default and are skipped with a log line when the variable is unset.
+# Never put key values in this file.
+api_keys:
+  chaos: CHAOS_KEY
+  github: GITHUB_TOKEN
+  virustotal: VIRUSTOTAL_API_KEY
+  urlscan: URLSCAN_API_KEY
+  certspotter: CERTSPOTTER_API_KEY
+  wpscan: WPSCAN_API_TOKEN
+  shodan: SHODAN_API_KEY
+  censys_id: CENSYS_API_ID
+  censys_secret: CENSYS_API_SECRET
+
+optional_sources:
+  crtsh: true
+  hackertarget: false
+  rapiddns: true
+  commoncrawl: true
+  bgpview: true
+  ripestat: true
+  certspotter: false
+  urlscan: false
+  virustotal: false
+  github: false
+  shodan: false
+  censys: false
+
+p01:
+  max_results: 5000
+  whois: true
+  dig: true
+
+p02:
+  passive_sources: [subfinder, amass, assetfinder, crtsh, rapiddns]
+  active_sources: [dnsx]
+  max_subdomains: 5000
+  max_active_candidates: 1000
+  passive_timeout: 90
+  takeover_check: false
+  resolve_active: true
+
+p03:
+  max_ips: 512
+  expand_cidrs: false
+
+p04:
+  top_ports: 100
+  service_detection: false
+  nmap_timing: T3
+  max_hosts: 1024
+
+p05:
+  schemes: [https, http]
+  max_hosts: 2000
+  probe_ports: [443, 80, 8443, 8080]
+  tech_signatures: true
+
+p06:
+  screenshots: false
+  vhost_fuzz: false
+  max_hosts: 200
+
+p07:
+  crawl_depth: 1
+  max_urls_per_host: 250
+  max_total_urls: 5000
+  wayback_limit: 1000
+  commoncrawl_limit: 500
+  robots: true
+  sitemap: true
+  sources: [katana, gau, waybackurls, hakrawler, waymore, commoncrawl, builtin]
+
+p08:
+  wordlist: wordlists/SecLists/Discovery/Web-Content/raft-small-words.txt
+  fallback_wordlist: wordlists/ultrecon-common.txt
+  extensions: [php, asp, aspx, jsp, json, txt, bak, zip, xml]
+  max_paths: 2000
+  tools: [ffuf, feroxbuster, gobuster, dirsearch]
+
+p09:
+  max_js_files: 100
+  max_js_bytes: 2097152
+  scan_secrets: true
+  max_endpoints_per_file: 500
+
+p10:
+  max_urls: 1000
+  active_tools: [arjun, x8, kiterunner]
+  max_params_per_url: 50
+
+p11:
+  doc_paths:
+    - /swagger.json
+    - /swagger/v1/swagger.json
+    - /openapi.json
+    - /api-docs
+    - /v3/api-docs
+    - /api/swagger.json
+    - /.well-known/openapi.json
+  max_hosts: 500
+
+p12:
+  common_paths: [/graphql, /api/graphql, /graphiql, /v1/graphql, /query]
+  max_hosts: 500
+
+p13:
+  soap_extensions: [".wsdl", ".asmx", ".svc"]
+  max_endpoints: 1000
+
+p14:
+  # Import-only and disabled by default. No cloud provider APIs or asset probes run.
+  enabled: false
+  own_account_only: true
+  # Map provider names to operator-asserted account IDs; never put credentials here.
+  own_account_context: {}
+  owned_assets: []
+
+p15:
+  check_paths: ["/.git/HEAD", "/.git/config", "/.env", "/.env.local"]
+  max_hosts: 500
+  scan_downloaded_js: true
+
+p16:
+  probes: [/wp-json/, /wp-login.php, /administrator/, /user/login, /sitemap.xml]
+  max_hosts: 500
+
+p17:
+  nuclei_severity: low,medium,high,critical
+  nuclei_tags: ""
+  max_targets: 1000
+  run_nikto: true
+  run_zap: false

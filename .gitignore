@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+*.pyc
+data/
+output/
+tools/bin/
+tools/src/
+.env
+*.sqlite3
+.ruff_cache/
+.pytest_cache/
+build/
+dist/
+*.egg-info/

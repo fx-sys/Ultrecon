@@ -1,0 +1,77 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$id: "https://github.com/fx-sys/Ultrecon/config/scope.schema.yaml"
+title: Ultrecon scope file
+description: |
+  The target file (web.txt) is a UTF-8 text file with one hostname or wildcard
+  hostname per line. Blank lines and lines beginning with '#' are ignored.
+  Entries are normalized to lowercase ASCII (IDNA), trailing dots are removed,
+  and duplicates are collapsed. A single leading '*.' is the legacy suffix
+  wildcard (subdomains only). Other '*' characters form a label-local glob:
+  each '*' matches zero or more characters within one DNS label, and the full
+  hostname must match with the same number of labels. Glob patterns are scope
+  constraints, not concrete probe seeds.
+type: object
+additionalProperties: false
+required: [targets]
+properties:
+  targets:
+    type: array
+    minItems: 1
+    items:
+      type: object
+      additionalProperties: false
+      required: [raw, wildcard]
+      oneOf:
+        - required: [domain]
+          not:
+            required: [pattern]
+        - required: [pattern]
+          not:
+            required: [domain]
+          properties:
+            wildcard:
+              const: false
+      properties:
+        raw:
+          type: string
+          minLength: 1
+          description: Original line after whitespace trimming.
+        domain:
+          type: string
+          pattern: "^(?=.{1,253}$)([a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$"
+          description: Normalized hostname for a bare or legacy leading '*.' entry.
+        pattern:
+          type: string
+          minLength: 1
+          maxLength: 253
+          pattern: "^(?=.{1,253}$)(?=.*\\*)(?:[a-z0-9*-]{1,63}\\.)+[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$"
+          description: Canonical label-local glob; wildcard-bearing labels are ASCII-only.
+        wildcard:
+          type: boolean
+          description: True only for the legacy leading '*.' suffix boundary.
+        in_scope:
+          type: boolean
+          default: true
+examples:
+  - targets:
+      - raw: example.com
+        domain: example.com
+        wildcard: false
+      - raw: "*.example.com"
+        domain: example.com
+        wildcard: true
+      - raw: "*api*.example.org"
+        pattern: "*api*.example.org"
+        wildcard: false
+      - raw: staging.example.org
+        domain: staging.example.org
+        wildcard: false
+line_grammar:
+  comment: "^\\s*#.*$"
+  blank: "^\\s*$"
+  legacy_wildcard: "^\\*\\.[A-Za-z0-9.-]+$"
+  hostname_or_glob: "^[A-Za-z0-9*-]+(?:\\.[A-Za-z0-9*-]+)+\\.?$"
+  notes:
+    - URLs, ports, paths, CIDR ranges, bare '*', wildcard TLDs, and unsupported glob syntax are rejected.
+    - A '*' in a generic pattern matches only within its DNS label; the final label must be literal.
+    - Internationalized literal labels are accepted and converted with IDNA; wildcard-bearing labels are ASCII-only.
